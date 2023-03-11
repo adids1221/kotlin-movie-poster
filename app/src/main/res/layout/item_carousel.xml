@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2E4F4F"
+    android:elevation="8dp"> <!-- You must give a background to this layout if you want the shadow to work -->
+
+
+    <TextView
+        android:id="@+id/item_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="5dp"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:maxLines="2"
+        android:text="Lorem Ipulem Ipulem Lorem"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="40dp" />
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="355dp"
+        android:layout_height="296dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_text"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <Button
+        android:id="@+id/select_movie_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:backgroundTint="#0E8388"
+        android:text="Select Movie"
+        android:textColor="#CBE4DE"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_image" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
