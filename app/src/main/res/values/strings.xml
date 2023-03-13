@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Movie Poster</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="release_date">Release Date</string>
+    <string name="select_tickets">Select number of tickets:</string>
+    <string name="select_date">Select date</string>
+    <string name="total_price">Total Price</string>
+    <string name="submit">Submit</string>
+    <string name="dummy">Lorem Ipulem Ipulem Lorem</string>
+    <string name="select_movie">Select Movie</string>
+
 </resources>
