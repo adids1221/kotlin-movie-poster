@@ -1,14 +1,12 @@
 package com.example.movieposter
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.NumberPicker
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
@@ -33,8 +31,8 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
         cardMovieName.text = carouselDataList[position].title
         Picasso.get().load(carouselDataList[position].poster).into(cardMoviePoster)
         selectBtn.setOnClickListener {
-            val dialog = Dialog(holder.itemView.context)
-            dialog.setContentView(R.layout.movie_dialog)
+            val detailsDialog = Dialog(holder.itemView.context)
+            detailsDialog.setContentView(R.layout.movie_dialog)
 
             val ticketPrice = 35
             var totalTickets = 1
@@ -42,14 +40,30 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val datePickerMinDate = dateFormat.parse(movieReleaseDate)
 
-            val movieTitle = dialog.findViewById<TextView>(R.id.dialog_movie_title)
-            val movieImage = dialog.findViewById<ImageView>(R.id.dialog_movie_image)
-            val releaseDate = dialog.findViewById<TextView>(R.id.dialog_movie_release_date)
-            val numberOfTickets = dialog.findViewById<TextView>(R.id.dialog_number_picker_title)
-            val numberPicker = dialog.findViewById<NumberPicker>(R.id.dialog_number_picker)
-            val selectDate = dialog.findViewById<TextView>(R.id.dialog_date_picker_title)
-            val totalPrice = dialog.findViewById<TextView>(R.id.dialog_total_price)
+            val movieTitle = detailsDialog.findViewById<TextView>(R.id.dialog_movie_title)
+            val movieImage = detailsDialog.findViewById<ImageView>(R.id.dialog_movie_image)
+            val numberOfTickets =
+                detailsDialog.findViewById<TextView>(R.id.dialog_number_picker_title)
+            val numberPicker = detailsDialog.findViewById<NumberPicker>(R.id.dialog_number_picker)
+            val selectDate = detailsDialog.findViewById<TextView>(R.id.dialog_date_picker_title)
+            val totalPrice = detailsDialog.findViewById<TextView>(R.id.dialog_total_price)
+            val paymentRadioGroup = detailsDialog.findViewById<RadioGroup>(R.id.payment_radio_group)
+            val submitButton = detailsDialog.findViewById<Button>(R.id.submit_button)
             val calendar = Calendar.getInstance()
+            var selectedPayment = ""
+
+            fun verifyMessage(): String {
+                return "You selected to watch:\n${movieTitle.text} on the ${selectDate.text} ${numberOfTickets.text}.\ntickets Total price: ${totalPrice.text}.\nPay by $selectedPayment."
+            }
+
+            fun toastMessage(): String {
+                return "${movieTitle.text} on the ${selectDate.text}, $totalTickets tickets."
+            }
+
+            paymentRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+                selectedPayment =
+                    if (R.id.payment_credit_card == checkedId) "Credit Card" else "PayPal"
+            }
 
             val listener = DatePickerDialog.OnDateSetListener { p0, year, month, day ->
                 calendar.set(Calendar.YEAR, year)
@@ -89,8 +103,6 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
 
             Picasso.get().load(carouselDataList[position].poster).into(movieImage)
 
-            releaseDate.text = "Release Date: $movieReleaseDate"
-
             numberOfTickets.text = "Number of tickets: $totalTickets"
 
             numberPicker.minValue = 1
@@ -109,7 +121,24 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
                 }
             }
 
-            dialog.show()
+            submitButton.setOnClickListener {
+                val builder = AlertDialog.Builder(holder.itemView.context)
+                builder.setTitle("Verify Purchase")
+                builder.setMessage(verifyMessage())
+
+                builder.setPositiveButton("Purchase") { dialog, which ->
+                    detailsDialog.cancel()
+                    Toast.makeText(holder.itemView.context, toastMessage(), Toast.LENGTH_LONG)
+                        .show()
+                }
+
+                builder.setNegativeButton("Decline") { dialog, which ->
+                }
+
+                builder.show()
+            }
+
+            detailsDialog.show()
         }
     }
 

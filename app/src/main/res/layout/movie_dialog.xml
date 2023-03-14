@@ -16,26 +16,15 @@
         android:gravity="center_horizontal"
         android:text="@string/movie_title"
         android:textColor="#2E4F4F"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/dialog_movie_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="dialog movie image"/>
-
-    <TextView
-        android:id="@+id/dialog_movie_release_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/release_date"
-        android:textColor="#2E4F4F"
-        android:textSize="18sp" />
+        android:contentDescription="dialog movie image"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/dialog_number_picker_title"
@@ -67,6 +56,38 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/dialog_payment_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/payment_method"
+        android:textColor="#2E4F4F"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/payment_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#024CAF50"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/payment_credit_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_method_1"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/payment_paypal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_method_2"
+            android:textSize="14sp" />
+    </RadioGroup>
+
+    <TextView
         android:id="@+id/dialog_total_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +98,7 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/submit_button"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
