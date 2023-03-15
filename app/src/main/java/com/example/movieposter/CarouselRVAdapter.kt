@@ -3,6 +3,7 @@ package com.example.movieposter
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,10 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val detailsDialog = Dialog(holder.itemView.context)
             detailsDialog.setContentView(R.layout.movie_dialog)
 
+
+            var cinemas = arrayOf("Yes Planet Rishon", "Yes Planet Ayalon", "Yes Planet Haifa")
+            var selectedCinema = ""
+            var isDateSelected = false
             val ticketPrice = 35
             var totalTickets = 1
             val movieReleaseDate = carouselDataList[position].release_date
@@ -47,17 +52,27 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val numberPicker = detailsDialog.findViewById<NumberPicker>(R.id.dialog_number_picker)
             val selectDate = detailsDialog.findViewById<TextView>(R.id.dialog_date_picker_title)
             val totalPrice = detailsDialog.findViewById<TextView>(R.id.dialog_total_price)
+            val spinner = detailsDialog.findViewById<Spinner>(R.id.cinema_spinner)
             val paymentRadioGroup = detailsDialog.findViewById<RadioGroup>(R.id.payment_radio_group)
             val submitButton = detailsDialog.findViewById<Button>(R.id.submit_button)
             val calendar = Calendar.getInstance()
-            var selectedPayment = ""
+            var selectedPayment = "Credit Card"
 
             fun verifyMessage(): String {
-                return "You selected to watch:\n${movieTitle.text} on the ${selectDate.text} ${numberOfTickets.text}.\ntickets Total price: ${totalPrice.text}.\nPay by $selectedPayment."
+                return "You selected to watch:\n${movieTitle.text} on the ${selectDate.text} at $selectedCinema. \r\nYou have ${numberOfTickets.text} tickets.\r\nTotal price: ${totalPrice.text}.\nPay by $selectedPayment."
             }
 
             fun toastMessage(): String {
-                return "${movieTitle.text} on the ${selectDate.text}, $totalTickets tickets."
+                return "${movieTitle.text} on the ${selectDate.text} at $selectedCinema, $totalTickets tickets."
+            }
+
+
+            if (spinner != null) {
+                val adapter = ArrayAdapter(
+                    holder.itemView.context,
+                    android.R.layout.simple_spinner_item, cinemas
+                )
+                spinner.adapter = adapter
             }
 
             paymentRadioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -72,13 +87,13 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
                 val myFormat = "dd/MM/yyyy"
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 selectDate!!.text = sdf.format(calendar.time)
+                isDateSelected = true
                 totalPrice.text = "${
                     calcTotalPrice(
                         totalTickets,
                         ticketPrice
                     )
                 }₪"
-
             }
 
             val cYear = calendar.get(Calendar.YEAR)
@@ -97,6 +112,20 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
 
             selectDate.setOnClickListener {
                 datePickerDialog.show()
+            }
+
+            spinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View, position: Int, id: Long
+                ) {
+                    selectedCinema = cinemas[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    selectedCinema = cinemas[0]
+                }
             }
 
             movieTitle.text = carouselDataList[position].title
@@ -123,19 +152,30 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
 
             submitButton.setOnClickListener {
                 val builder = AlertDialog.Builder(holder.itemView.context)
-                builder.setTitle("Verify Purchase")
-                builder.setMessage(verifyMessage())
+                if (isDateSelected) {
+                    builder.setTitle("Verify Purchase")
+                    builder.setMessage(verifyMessage())
 
-                builder.setPositiveButton("Purchase") { dialog, which ->
-                    detailsDialog.cancel()
-                    Toast.makeText(holder.itemView.context, toastMessage(), Toast.LENGTH_LONG)
+                    builder.setPositiveButton("Purchase") { dialog, which ->
+                        detailsDialog.cancel()
+                        Toast.makeText(holder.itemView.context, toastMessage(), Toast.LENGTH_LONG)
+                            .show()
+                    }
+
+                    builder.setNegativeButton("Decline") { dialog, which ->
+                    }
+
+                    builder.show()
+                } else {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Select date to watch ${movieTitle.text}",
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                 }
 
-                builder.setNegativeButton("Decline") { dialog, which ->
-                }
 
-                builder.show()
             }
 
             detailsDialog.show()
@@ -156,16 +196,3 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
     }
 
 }
-//val alertDialog = AlertDialog.Builder(holder.itemView.context)
-//    .setTitle("Title of the dialog")
-//    .setMessage("Message to be displayed in the dialog")
-//    .setPositiveButton("OK") { dialog, _ ->
-//        // Do something when the user clicks the OK button
-//        dialog.dismiss()
-//    }
-//    .setNegativeButton("Cancel") { dialog, _ ->
-//        // Do something when the user clicks the Cancel button
-//        dialog.dismiss()
-//    }
-//    .create()
-//alertDialog.show()

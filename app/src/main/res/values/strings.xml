@@ -4,6 +4,7 @@
     <string name="release_date">Release Date</string>
     <string name="select_tickets">Select number of tickets:</string>
     <string name="select_date">Select date</string>
+    <string name="cinema_spinner">Select Cinema</string>
     <string name="payment_method">Payment Method</string>
     <string name="payment_method_1">Credit Card</string>
     <string name="payment_method_2">Paypal</string>
@@ -14,6 +15,4 @@
     <string name="verify_dialog_title">Verify Purchase</string>
     <string name="verify_dialog_accept_btn">Purchase</string>
     <string name="verify_dialog_decline_btn">Decline</string>
-
-
 </resources>
