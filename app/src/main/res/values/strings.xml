@@ -30,4 +30,10 @@
     <string name="verify_part_5">tickets</string>
     <string name="verify_part_6">Total price</string>
     <string name="verify_part_7">Pay by</string>
+
+    <string name="puss_in_boots">Puss in Boots: The Last Wish</string>
+    <string name="scream_vi">Scream VI</string>
+    <string name="supre_mario">The Super Mario Bros. Movie</string>
+    <string name="jhon_wick">John Wick: Chapter 4</string>
+    <string name="shazam">Shazam! Fury of the Gods</string>
 </resources>

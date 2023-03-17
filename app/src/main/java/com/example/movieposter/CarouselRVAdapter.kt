@@ -64,10 +64,6 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             var isDateSelected = false
             val ticketPrice = 35
             var totalTickets = 1
-            val movieReleaseDate = carouselDataList[position].release_date
-            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-            val datePickerMinDate = dateFormat.parse(movieReleaseDate)
-
 
             val movieTitle = detailsDialog.findViewById<TextView>(R.id.dialog_movie_title)
             val movieImage = detailsDialog.findViewById<ImageView>(R.id.dialog_movie_image)
@@ -80,7 +76,7 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val paymentRadioGroup = detailsDialog.findViewById<RadioGroup>(R.id.payment_radio_group)
             val submitButton = detailsDialog.findViewById<Button>(R.id.submit_button)
             val calendar = Calendar.getInstance()
-            var selectedPayment = "Credit Card"
+            var selectedPayment = dialogContext.getString(R.string.payment_method_1)
 
             //Functions
             fun verifyMessage(): String {
@@ -186,10 +182,6 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
                 cMonth,
                 cDay
             )
-
-            if (datePickerMinDate != null) {
-                datePickerDialog.datePicker.minDate = datePickerMinDate.time
-            }
 
             selectDate.setOnClickListener {
                 datePickerDialog.show()

@@ -12,9 +12,7 @@ import java.lang.Math.abs
 
 data class CarouselData(
     val title: String,
-    val overview: String,
     val poster: String,
-    val release_date: String
 )
 
 class MovieCarousel : AppCompatActivity() {
@@ -42,35 +40,27 @@ class MovieCarousel : AppCompatActivity() {
         val demoData =
             arrayListOf<CarouselData>(
                 CarouselData(
-                    "Puss in Boots: The Last Wish",
-                    "Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.",
+                    this.getString(R.string.puss_in_boots),
                     imagePrefix + "kuf6dutpsT0vSVehic3EZIqkOBt.jpg",
-                    "2022-12-07",
                 ),
                 CarouselData(
-                    "Scream VI",
-                    "Following the latest Ghostface killings, the four survivors leave Woodsboro behind and start a fresh chapte",
+                    this.getString(R.string.scream_vi),
                     imagePrefix + "t2NEaFrNFRCrBIyAETlz5sqq15H.jpg",
-                    "2023-03-08",
                 ),
                 CarouselData(
-                    "The Super Mario Bros. Movie",
-                    "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.i",
+                    this.getString(R.string.supre_mario),
                     imagePrefix + "qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                    "2023-03-30",
                 ),
                 CarouselData(
-                    "John Wick: Chapter 4",
-                    "With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe and forces that turn old friends into foes.",
+                    this.getString(R.string.jhon_wick),
                     imagePrefix + "vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
-                    "2023-03-22",
-                ),
+
+                    ),
                 CarouselData(
-                    "Shazam! Fury of the Gods",
-                    "Billy Batson and his foster siblings, who transform into superheroes by saying \\\"Shazam!\\\", are forced to get back into action and fight the Daughters of Atlas, who they must stop from using a weapon that could destroy the world.",
+                    this.getString(R.string.shazam),
                     imagePrefix + "zpCCTtuQMHiHycpsrWnW2eCrBql.jpg",
-                    "2023-03-15",
-                ),
+
+                    ),
             )
 
         viewPager.adapter = CarouselRVAdapter(demoData)
