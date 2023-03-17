@@ -1,8 +1,11 @@
 <resources>
+    <string name="browse_movies">Browse Movies</string>
+    <string name="adi_cinema">Adi\'s Cinema</string>
     <string name="app_name">Movie Poster</string>
     <string name="movie_title">Movie Title</string>
     <string name="release_date">Release Date</string>
     <string name="select_tickets">Select number of tickets:</string>
+    <string name="number_of_tickets">Number of tickets</string>
     <string name="select_date">Select date</string>
     <string name="cinema_spinner">Select Cinema</string>
     <string name="payment_method">Payment Method</string>
@@ -12,7 +15,19 @@
     <string name="submit">Submit</string>
     <string name="dummy">Lorem Ipulem Ipulem Lorem</string>
     <string name="select_movie">Select Movie</string>
+    <string name="select_date_error">Select date to watch</string>
     <string name="verify_dialog_title">Verify Purchase</string>
     <string name="verify_dialog_accept_btn">Purchase</string>
     <string name="verify_dialog_decline_btn">Decline</string>
+    <string name="yp_rishon">Yes Planet Rishon</string>
+    <string name="yp_haifa">Yes Planet Haifa</string>
+    <string name="yp_ayalon">Yes Planet Ayalon</string>
+
+    <string name="verify_part_1">You selected to watch</string>
+    <string name="verify_part_2">on the</string>
+    <string name="verify_part_3">at</string>
+    <string name="verify_part_4">You have</string>
+    <string name="verify_part_5">tickets</string>
+    <string name="verify_part_6">Total price</string>
+    <string name="verify_part_7">Pay by</string>
 </resources>

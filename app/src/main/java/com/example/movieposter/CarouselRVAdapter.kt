@@ -1,12 +1,17 @@
 package com.example.movieposter
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.provider.Settings.Global.getString
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -25,18 +30,36 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
         return CarouselItemViewHolder(viewHolder)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CarouselItemViewHolder, position: Int) {
+        val dialogContext = holder.itemView.context
+        //Animations
+        val alphaAnim = AnimationUtils.loadAnimation(dialogContext, R.anim.fade)
+        val zoomInAnim = AnimationUtils.loadAnimation(dialogContext, R.anim.zoom_in)
+        val bounceAnim = AnimationUtils.loadAnimation(dialogContext, R.anim.bounce)
+        val fadeInAnim = AnimationUtils.loadAnimation(dialogContext, R.anim.fade)
+
+        //Movie card
         val cardMovieName = holder.itemView.findViewById<TextView>(R.id.item_text)
         val cardMoviePoster = holder.itemView.findViewById<ImageView>(R.id.item_image)
         val selectBtn = holder.itemView.findViewById<Button>(R.id.select_movie_btn)
         cardMovieName.text = carouselDataList[position].title
         Picasso.get().load(carouselDataList[position].poster).into(cardMoviePoster)
+        cardMoviePoster.startAnimation(alphaAnim)
+        cardMoviePoster.setOnClickListener { cardMoviePoster.startAnimation(bounceAnim) }
+        cardMovieName.startAnimation(fadeInAnim)
+
+        //Select Btn - open detailsDialog
         selectBtn.setOnClickListener {
-            val detailsDialog = Dialog(holder.itemView.context)
+            val detailsDialog = Dialog(dialogContext)
             detailsDialog.setContentView(R.layout.movie_dialog)
 
-
-            var cinemas = arrayOf("Yes Planet Rishon", "Yes Planet Ayalon", "Yes Planet Haifa")
+            val cinemas =
+                arrayOf(
+                    dialogContext.getString(R.string.yp_rishon),
+                    dialogContext.getString(R.string.yp_ayalon),
+                    dialogContext.getString(R.string.yp_haifa)
+                )
             var selectedCinema = ""
             var isDateSelected = false
             val ticketPrice = 35
@@ -44,6 +67,7 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val movieReleaseDate = carouselDataList[position].release_date
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val datePickerMinDate = dateFormat.parse(movieReleaseDate)
+
 
             val movieTitle = detailsDialog.findViewById<TextView>(R.id.dialog_movie_title)
             val movieImage = detailsDialog.findViewById<ImageView>(R.id.dialog_movie_image)
@@ -58,28 +82,83 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val calendar = Calendar.getInstance()
             var selectedPayment = "Credit Card"
 
+            //Functions
             fun verifyMessage(): String {
-                return "You selected to watch:\n${movieTitle.text} on the ${selectDate.text} at $selectedCinema. \r\nYou have ${numberOfTickets.text} tickets.\r\nTotal price: ${totalPrice.text}.\nPay by $selectedPayment."
+                return "${dialogContext.getString(R.string.verify_part_1)}:\n${movieTitle.text} ${
+                    dialogContext.getString(
+                        R.string.verify_part_2
+                    )
+                } ${selectDate.text} ${dialogContext.getString(R.string.verify_part_3)} $selectedCinema. \r\n${
+                    dialogContext.getString(
+                        R.string.verify_part_4
+                    )
+                } ${numberOfTickets.text} ${dialogContext.getString(R.string.verify_part_5)}.\r\n${
+                    dialogContext.getString(
+                        R.string.verify_part_6
+                    )
+                }: ${totalPrice.text}.\n${dialogContext.getString(R.string.verify_part_7)} $selectedPayment."
             }
 
             fun toastMessage(): String {
-                return "${movieTitle.text} on the ${selectDate.text} at $selectedCinema, $totalTickets tickets."
+                return "${movieTitle.text} ${
+                    dialogContext.getString(
+                        R.string.verify_part_2
+                    )
+                } ${selectDate.text} ${dialogContext.getString(R.string.verify_part_3)} $selectedCinema, $totalTickets ${
+                    dialogContext.getString(
+                        R.string.verify_part_5
+                    )
+                }."
             }
 
+            movieTitle.text = carouselDataList[position].title
+            Picasso.get().load(carouselDataList[position].poster).into(movieImage)
+            numberOfTickets.text =
+                "${dialogContext.getString(R.string.number_of_tickets)}: $totalTickets"
+            movieImage.setOnClickListener { movieImage.startAnimation(bounceAnim) }
+            movieTitle.setOnClickListener { movieTitle.startAnimation(zoomInAnim) }
 
+            val translationDownTitle: Animator =
+                ObjectAnimator.ofFloat(movieTitle, "translationY", -100f, 0f).setDuration(3000)
+            val rotateTitle: Animator =
+                ObjectAnimator.ofFloat(movieTitle, "rotationY", 0f, 360f).setDuration(3000)
+
+            val animatorSet = AnimatorSet()
+            animatorSet.playTogether(translationDownTitle, rotateTitle)
+            animatorSet.start()
+
+            //Cinema Spinner
             if (spinner != null) {
                 val adapter = ArrayAdapter(
-                    holder.itemView.context,
+                    dialogContext,
                     android.R.layout.simple_spinner_item, cinemas
                 )
                 spinner.adapter = adapter
             }
 
-            paymentRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-                selectedPayment =
-                    if (R.id.payment_credit_card == checkedId) "Credit Card" else "PayPal"
+            spinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View, position: Int, id: Long
+                ) {
+                    selectedCinema = cinemas[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    selectedCinema = cinemas[0]
+                }
             }
 
+            //Payment RadioGroup
+            paymentRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+                selectedPayment =
+                    if (R.id.payment_credit_card == checkedId) dialogContext.getString(R.string.payment_method_1) else dialogContext.getString(
+                        R.string.payment_method_2
+                    )
+            }
+
+            //DatePickerDialog
             val listener = DatePickerDialog.OnDateSetListener { p0, year, month, day ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
@@ -101,46 +180,30 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
             val cDay = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(
-                holder.itemView.context,
+                dialogContext,
                 listener,
                 cYear,
                 cMonth,
                 cDay
             )
 
-            datePickerDialog.datePicker.minDate = datePickerMinDate.time
+            if (datePickerMinDate != null) {
+                datePickerDialog.datePicker.minDate = datePickerMinDate.time
+            }
 
             selectDate.setOnClickListener {
                 datePickerDialog.show()
             }
 
-            spinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View, position: Int, id: Long
-                ) {
-                    selectedCinema = cinemas[position]
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    selectedCinema = cinemas[0]
-                }
-            }
-
-            movieTitle.text = carouselDataList[position].title
-
-            Picasso.get().load(carouselDataList[position].poster).into(movieImage)
-
-            numberOfTickets.text = "Number of tickets: $totalTickets"
-
+            //Number Picker
             numberPicker.minValue = 1
             numberPicker.maxValue = 10
             numberPicker.wrapSelectorWheel = true
             numberPicker.setOnValueChangedListener { picker, oldVal, newVal ->
                 totalTickets = newVal
-                numberOfTickets.text = "Number of tickets: $totalTickets"
-                if (selectDate.text != "Select date") {
+                numberOfTickets.text =
+                    "${dialogContext.getString(R.string.number_of_tickets)}: $totalTickets"
+                if (selectDate.text != dialogContext.getString(R.string.select_date)) {
                     totalPrice.text = "${
                         calcTotalPrice(
                             totalTickets,
@@ -150,41 +213,41 @@ class CarouselRVAdapter(private val carouselDataList: ArrayList<CarouselData>) :
                 }
             }
 
+            //Submit
             submitButton.setOnClickListener {
-                val builder = AlertDialog.Builder(holder.itemView.context)
+                val builder = AlertDialog.Builder(dialogContext)
                 if (isDateSelected) {
-                    builder.setTitle("Verify Purchase")
+                    builder.setTitle(dialogContext.getString(R.string.verify_dialog_title))
                     builder.setMessage(verifyMessage())
 
-                    builder.setPositiveButton("Purchase") { dialog, which ->
+                    builder.setPositiveButton(dialogContext.getString(R.string.verify_dialog_accept_btn)) { dialog, which ->
                         detailsDialog.cancel()
-                        Toast.makeText(holder.itemView.context, toastMessage(), Toast.LENGTH_LONG)
+                        Toast.makeText(dialogContext, toastMessage(), Toast.LENGTH_LONG)
                             .show()
                     }
 
-                    builder.setNegativeButton("Decline") { dialog, which ->
+                    builder.setNegativeButton(dialogContext.getString(R.string.verify_dialog_decline_btn)) { dialog, which ->
                     }
 
                     builder.show()
                 } else {
                     Toast.makeText(
-                        holder.itemView.context,
-                        "Select date to watch ${movieTitle.text}",
+                        dialogContext,
+                        "${dialogContext.getString(R.string.select_date_error)} ${movieTitle.text}",
                         Toast.LENGTH_LONG
                     )
                         .show()
                 }
-
-
             }
 
+            detailsDialog.window?.attributes?.windowAnimations = R.style.dialogAnimation
+            detailsDialog.window?.setGravity(Gravity.BOTTOM)
             detailsDialog.show()
         }
     }
 
     private fun calcTotalPrice(numOfTickets: Int, Price: Int): String {
         return try {
-            println("Number of tickets $numOfTickets, price $Price")
             (numOfTickets * Price).toString()
         } catch (e: NumberFormatException) {
             e.toString()

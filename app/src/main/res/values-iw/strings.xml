@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">פוסטר</string>
+    <string name="movie_title">שם הסרט</string>
+    <string name="release_date">תאריך יציאה</string>
+    <string name="select_tickets">מספר כרטיסים:</string>
+    <string name="select_date">בחר תאריך</string>
+    <string name="cinema_spinner">קולנוע</string>
+    <string name="payment_method">שיטת תשלום</string>
+    <string name="payment_method_1">כרטיס אשראי</string>
+    <string name="payment_method_2">PayPal</string>
+    <string name="total_price">מחיר</string>
+    <string name="submit">בצע רכישה</string>
+    <string name="dummy">לורם לורם</string>
+    <string name="select_movie">בחר סרט</string>
+    <string name="select_date_error">בחר תאריך לצפייה בסרט</string>
+    <string name="verify_dialog_title">הרכישה שלך</string>
+    <string name="verify_dialog_accept_btn">רכוש</string>
+    <string name="verify_dialog_decline_btn">בטל</string>
+    <string name="browse_movies">הסרטים שלנו</string>
+    <string name="adi_cinema">הקולנוע של עדי</string>
+    <string name="yp_rishon">יס פלאנט ראשון לציון</string>
+    <string name="yp_haifa">יס פלאנט חיפה</string>
+    <string name="yp_ayalon">יס פלאנט חיפה</string>
+    <string name="number_of_tickets">מספר כרטיסים</string>
+    <string name="verify_part_1">בחרת לצפות ב</string>
+    <string name="verify_part_2">בתאריך</string>
+    <string name="verify_part_3">בקולנוע</string>
+    <string name="verify_part_4">יש לך</string>
+    <string name="verify_part_5">כרטיסים</string>
+    <string name="verify_part_6">סה\"כ מחיר</string>
+    <string name="verify_part_7">תשלום באמצעות</string>
+</resources>
